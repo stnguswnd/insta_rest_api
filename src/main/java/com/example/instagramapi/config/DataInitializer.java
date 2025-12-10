@@ -53,7 +53,6 @@ public class DataInitializer implements CommandLineRunner {
         Post post1 = postRepository.save(
                 Post.builder()
                         .content("sample post1")
-                        .imageUrl("/uploads/079c8b05-98c7-4a78-9ba3-17dd865e8dc8.png")
                         .user(admin)
                         .build()
         );
@@ -61,7 +60,6 @@ public class DataInitializer implements CommandLineRunner {
         Post post2 = postRepository.save(
                 Post.builder()
                         .content("sample post2")
-                        .imageUrl("/uploads/079c8b05-98c7-4a78-9ba3-17dd865e8dc8.png")
                         .user(test)
                         .build()
         );
