@@ -48,9 +48,9 @@ public class PostResponse {
                 .imageUrl(post.getImageUrl())
                 .author(UserResponse.from(post.getUser())) //엔티티를 Dto 객체로 만들어서 저장하기 위해 여기 Get User을 살짝 바꿔준다.
                 .createdAt(post.getCreatedAt())
-                .liked(false)
-                .likeCount(0)
-                .commentCount(0)
+                .liked(liked)
+                .likeCount(likeCount)
+                .commentCount(commentCount)
                 .build();
 
     }
