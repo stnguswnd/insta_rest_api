@@ -66,4 +66,24 @@ public class PostController {
         CommentResponse response = commentService.create(id, userDetails.getId(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
     }
+
+    //댓글 출력
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<ApiResponse<List<CommentResponse>>> getComments(
+            @PathVariable Long id
+    ) {
+        List<CommentResponse> responses = commentService.findByPostId(id);
+        return ResponseEntity.ok(ApiResponse.success(responses));
+    }
+
+    //댓글 삭제
+
+    @DeleteMapping("/{id}/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ){
+        commentService.delete(commentId, userDetails.getId());
+        return ResponseEntity.noContent().build();
+    }
 }
