@@ -16,7 +16,7 @@ public class PostResponse {
     private String imageUrl;
     private LocalDateTime createdAt;
 
-    private UserResponse user;
+    private UserResponse author;
 
     private boolean liked;
     private long likeCount;
@@ -27,7 +27,7 @@ public class PostResponse {
                 .id(post.getId())
                 .content(post.getContent())
                 .imageUrl(post.getImageUrl())
-                .user(UserResponse.from(post.getUser())) //엔티티를 Dto 객체로 만들어서 저장하기 위해 여기 Get User을 살짝 바꿔준다.
+                .author(UserResponse.from(post.getUser())) //엔티티를 Dto 객체로 만들어서 저장하기 위해 여기 Get User을 살짝 바꿔준다.
                 .createdAt(post.getCreatedAt())
                 .liked(false)
                 .likeCount(0)
@@ -46,7 +46,7 @@ public class PostResponse {
                 .id(post.getId())
                 .content(post.getContent())
                 .imageUrl(post.getImageUrl())
-                .user(UserResponse.from(post.getUser())) //엔티티를 Dto 객체로 만들어서 저장하기 위해 여기 Get User을 살짝 바꿔준다.
+                .author(UserResponse.from(post.getUser())) //엔티티를 Dto 객체로 만들어서 저장하기 위해 여기 Get User을 살짝 바꿔준다.
                 .createdAt(post.getCreatedAt())
                 .liked(false)
                 .likeCount(0)
