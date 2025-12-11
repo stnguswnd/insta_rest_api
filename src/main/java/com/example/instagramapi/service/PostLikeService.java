@@ -25,12 +25,12 @@ public class PostLikeService {
     @Transactional
     public LikeResponse like(Long userId, Long postId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(()-> new CustomException(ErrorCode.POST_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
-        //이미 좋아요 했는지 확인
+        // 이미 좋아요 했는지 확인
         if (postLikeRepository.existsByUserIdAndPostId(userId, postId)) {
             throw new CustomException(ErrorCode.ALREADY_LIKED);
         }
@@ -41,28 +41,28 @@ public class PostLikeService {
                 .build();
 
         postLikeRepository.save(postLike);
-        //{liked : true, likecount : 10}
 
         long likeCount = postLikeRepository.countByPostId(postId);
         return LikeResponse.of(true, likeCount);
     }
 
     @Transactional
-    public LikeResponse unlike(Long userId, Long postId){
+    public LikeResponse unlike(Long userId, Long postId) {
         if (!postRepository.existsById(postId)) {
             throw new CustomException(ErrorCode.POST_NOT_FOUND);
         }
 
         PostLike postlike = postLikeRepository.findByUserIdAndPostId(userId, postId)
-                .orElseThrow(()-> new CustomException(ErrorCode.NOT_LIKED));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_LIKED));
 
         postLikeRepository.delete(postlike);
 
         long likeCount = postLikeRepository.countByPostId(postId);
         return LikeResponse.of(false, likeCount);
+
     }
 
-    public LikeResponse getLikedStatus(Long postId, Long userId) {
+    public LikeResponse getLikeStatus(Long postId, Long userId) {
         if (!postRepository.existsById(postId)) {
             throw new CustomException(ErrorCode.POST_NOT_FOUND);
         }
@@ -72,5 +72,4 @@ public class PostLikeService {
 
         return LikeResponse.of(liked, likeCount);
     }
-
 }

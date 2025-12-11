@@ -13,9 +13,7 @@ import com.example.instagramapi.service.CommentService;
 import com.example.instagramapi.service.PostLikeService;
 import com.example.instagramapi.service.PostService;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -51,8 +49,11 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<PostResponse>> findById(@PathVariable Long id) {
-        PostResponse response = postService.findById(id);
+    public ResponseEntity<ApiResponse<PostResponse>> findById(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        PostResponse response = postService.findById(id, userDetails.getId());
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -73,31 +74,28 @@ public class PostController {
     ) {
         CommentResponse response = commentService.create(id, userDetails.getId(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
+
     }
 
-    //댓글 출력
     @GetMapping("/{id}/comments")
     public ResponseEntity<ApiResponse<List<CommentResponse>>> getComments(
             @PathVariable Long id
     ) {
-        List<CommentResponse> responses = commentService.findByPostId(id);
-        return ResponseEntity.ok(ApiResponse.success(responses));
+        List<CommentResponse> response = commentService.findByPostId(id);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
-
-    //댓글 삭제
 
     @DeleteMapping("/{id}/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @PathVariable Long commentId,
             @AuthenticationPrincipal CustomUserDetails userDetails
-    ){
+    ) {
         commentService.delete(commentId, userDetails.getId());
         return ResponseEntity.noContent().build();
     }
 
-    //좋아요
     @PostMapping("/{id}/like")
-    public ResponseEntity<ApiResponse<LikeResponse>> Like(
+    public ResponseEntity<ApiResponse<LikeResponse>> like(
             @PathVariable Long id,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
@@ -105,23 +103,23 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    //delete인데 like로 통일!
     @DeleteMapping("/{id}/like")
-    public ResponseEntity<ApiResponse<LikeResponse>> UnLike(
+    public ResponseEntity<ApiResponse<LikeResponse>> unlike(
             @PathVariable Long id,
             @AuthenticationPrincipal CustomUserDetails userDetails
-    ){
+    ) {
         LikeResponse response = postLikeService.unlike(userDetails.getId(), id);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @GetMapping("/{id}/like")
-    public ResponseEntity<ApiResponse<LikeResponse>>  getLikeStatus(
+    public ResponseEntity<ApiResponse<LikeResponse>> getLikeStatus(
             @PathVariable Long id,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         Long userId = userDetails != null ? userDetails.getId() : null;
-        LikeResponse response = postLikeService.getLikedStatus(id, userId);
+        LikeResponse response = postLikeService.getLikeStatus(id, userId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
 }
